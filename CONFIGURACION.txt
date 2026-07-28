@@ -1,0 +1,41 @@
+NEXXO — CONFIGURACIÓN RÁPIDA
+
+DATOS PERSONALES
+Nombre del autor: Erick Alejandro
+Ubicación: Ciudad de México
+Correo: correo@ejemplo.com
+WhatsApp: 5210000000000
+Instagram: [PEGAR ENLACE]
+Facebook: [PEGAR ENLACE]
+Horario de atención: 8:00 p.m. a 10:00 p.m.
+
+CONTACTO
+El formulario y el registro de clientes fueron eliminados.
+El sitio utiliza únicamente iconos de:
+- WhatsApp
+- Instagram
+- Facebook
+- Correo
+
+DÓNDE CAMBIAR ENLACES
+Abre index.html y busca:
+- https://wa.me/5210000000000
+- href="#contacto" en Instagram
+- href="#contacto" en Facebook
+- mailto:correo@ejemplo.com
+
+GALERÍA
+Diseños destacados: exactamente 5 imágenes.
+Fotografía: exactamente 5 imágenes.
+
+DECLARACIÓN PERSONAL
+El cuadro gris muestra:
+- imagen22.jpg
+- imagen23.jpg
+- imagen24.jpg
+Cada fotografía incluye el nombre y firma de Erick Alejandro.
+
+RECURSOS
+Música: music/cancion.mp3
+Video: videos/clips/video1.mp4
+Firma: imagenes/firma.svg

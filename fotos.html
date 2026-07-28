@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Archivo fotográfico de NEXXO con 60 imágenes." name="description"/>
+<title>Fotos — NEXXO</title>
+<style>
+:root{
+  --bg:#09090a;
+  --panel:#151517;
+  --text:#f4f4f5;
+  --muted:#9999a0;
+  --line:rgba(255,255,255,.15);
+  --container:1480px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+body.locked{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+img{display:block;width:100%}
+
+.header{
+  position:sticky;
+  z-index:1000;
+  top:0;
+  border-bottom:1px solid var(--line);
+  background:rgba(9,9,10,.89);
+  backdrop-filter:blur(18px);
+}
+.nav{
+  width:min(calc(100% - 32px),var(--container));
+  min-height:74px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.brand{
+  font-size:.9rem;
+  font-weight:950;
+  letter-spacing:.24em;
+}
+.links{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  font-size:.78rem;
+  font-weight:800;
+}
+.links a{
+  padding:10px 0;
+  color:#b8b8bd;
+}
+.links a:hover,
+.links a.active{color:#fff}
+.back{
+  padding:10px 15px!important;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:#fff!important;
+}
+
+main{
+  width:min(calc(100% - 32px),var(--container));
+  margin:auto;
+  padding:75px 0 100px;
+}
+.heading{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:50px;
+  align-items:end;
+  margin-bottom:32px;
+}
+.eyebrow{
+  display:block;
+  margin-bottom:15px;
+  color:#9a9aa0;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+h1{
+  margin:0;
+  font-size:clamp(4rem,10vw,10rem);
+  line-height:.74;
+  letter-spacing:-.08em;
+}
+.counter{
+  display:flex;
+  align-items:end;
+  gap:12px;
+  padding-bottom:5px;
+}
+.counter strong{
+  font-size:clamp(3.2rem,7vw,7rem);
+  line-height:.75;
+  letter-spacing:-.07em;
+}
+.counter span{
+  padding-bottom:5px;
+  color:var(--muted);
+  font-size:.64rem;
+  font-weight:900;
+  letter-spacing:.18em;
+}
+.info{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+  margin-bottom:20px;
+  padding:17px 0;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.info p{
+  max-width:780px;
+  margin:0;
+  color:var(--muted);
+  line-height:1.65;
+}
+.info strong{
+  flex:0 0 auto;
+  font-size:.7rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:8px;
+}
+.photo-card{
+  position:relative;
+  min-width:0;
+  aspect-ratio:1;
+  overflow:hidden;
+  padding:0;
+  border:0;
+  border-radius:7px;
+  background:var(--panel);
+  color:#fff;
+}
+.photo-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform .45s ease,filter .35s ease;
+}
+.photo-card:hover img,
+.photo-card:focus-visible img{
+  transform:scale(1.055);
+  filter:brightness(.72);
+}
+.photo-card:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+.photo-card span{
+  position:absolute;
+  right:7px;
+  bottom:7px;
+  display:grid;
+  min-width:30px;
+  height:25px;
+  place-items:center;
+  padding:0 7px;
+  border-radius:999px;
+  background:rgba(0,0,0,.65);
+  font-size:.6rem;
+  font-weight:900;
+  backdrop-filter:blur(8px);
+}
+
+.lightbox{
+  position:fixed;
+  z-index:3000;
+  inset:0;
+  display:none;
+  place-items:center;
+  padding:22px;
+  background:rgba(0,0,0,.95);
+  backdrop-filter:blur(18px);
+}
+.lightbox.open{display:grid}
+.lightbox-panel{
+  position:relative;
+  width:min(100%,1250px);
+  min-height:76vh;
+  display:grid;
+  grid-template-columns:70px minmax(0,1fr) 70px;
+  align-items:center;
+}
+.lightbox figure{
+  min-width:0;
+  margin:0;
+}
+.lightbox figure img{
+  max-height:80vh;
+  object-fit:contain;
+  border-radius:10px;
+  background:#111;
+}
+.lightbox figcaption{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:14px 3px 0;
+}
+.lightbox figcaption strong{font-size:.87rem}
+.lightbox figcaption span{
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:850;
+  letter-spacing:.1em;
+}
+.close,
+.arrow{
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(22,22,25,.86);
+  color:#fff;
+  backdrop-filter:blur(10px);
+}
+.close{
+  position:absolute;
+  z-index:4;
+  right:0;
+  top:-9px;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  font-size:1.8rem;
+}
+.arrow{
+  width:48px;
+  height:48px;
+  justify-self:center;
+  border-radius:50%;
+  font-size:1.3rem;
+}
+.close:hover,.arrow:hover{
+  background:#fff;
+  color:#080808;
+}
+.footer{
+  padding:28px 16px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  text-align:center;
+  font-size:.7rem;
+  letter-spacing:.11em;
+}
+
+@media(max-width:1050px){
+  .gallery{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:800px){
+  .heading{grid-template-columns:1fr;gap:25px}
+  .counter{justify-self:start}
+  .info{align-items:flex-start;flex-direction:column;gap:8px}
+  .gallery{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .links a:not(.back){display:none}
+  .lightbox-panel{grid-template-columns:48px minmax(0,1fr) 48px}
+  .arrow{width:40px;height:40px}
+}
+@media(max-width:480px){
+  .nav,main{width:min(calc(100% - 16px),var(--container))}
+  main{padding-top:48px}
+  .gallery{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+  .photo-card{border-radius:2px}
+  .photo-card span{
+    right:4px;
+    bottom:4px;
+    min-width:22px;
+    height:19px;
+    padding:0 4px;
+    font-size:.5rem;
+  }
+  .lightbox{padding:9px}
+  .lightbox-panel{grid-template-columns:42px minmax(0,1fr) 42px}
+  .close{right:3px;top:-55px}
+}
+</style>
+</head>
+<body data-easter-egg="M.M.z"><!-- Easter egg del sitio: M.M.z -->
+<header class="header">
+<nav aria-label="Navegación de Fotos" class="nav">
+<a class="brand" href="index.html">NEXXO</a>
+<div class="links">
+<a href="index.html">Home</a>
+<a class="active" href="fotos.html">Fotos</a>
+<a href="index.html#contacto">Contacto</a>
+<a class="back" href="index.html">← Regresar al sitio</a>
+</div>
+</nav>
+</header>
+<main>
+<section class="heading">
+<div>
+<span class="eyebrow">ARCHIVO FOTOGRÁFICO</span>
+<h1>Fotos.</h1>
+</div>
+<div class="counter">
+<strong>60</strong>
+<span>IMÁGENES</span>
+</div>
+</section>
+<div class="info">
+<p>Esta galería está hecha con cariño para todos ustedes, con un trabajo honesto lleno de mucho esfuerzo y aprendizaje. También reconoce a mis compañeros y excompañeros, a quienes siempre se les agradecerá y reconocerá su trabajo.</p>
+<strong>60 imágenes disponibles</strong>
+</div>
+<section aria-label="Galería de 60 fotografías" class="gallery">
+<button aria-label="Abrir fotografía 01" class="photo-card" data-index="0" data-src="imagenes/archivo/foto01.jpg" data-title="Fotografía 01" type="button">
+<img alt="Fotografía 01" decoding="async" loading="lazy" src="imagenes/archivo/foto01.jpg"/>
+<span>01</span>
+</button>
+<button aria-label="Abrir fotografía 02" class="photo-card" data-index="1" data-src="imagenes/archivo/foto02.jpg" data-title="Fotografía 02" type="button">
+<img alt="Fotografía 02" decoding="async" loading="lazy" src="imagenes/archivo/foto02.jpg"/>
+<span>02</span>
+</button>
+<button aria-label="Abrir fotografía 03" class="photo-card" data-index="2" data-src="imagenes/archivo/foto03.jpg" data-title="Fotografía 03" type="button">
+<img alt="Fotografía 03" decoding="async" loading="lazy" src="imagenes/archivo/foto03.jpg"/>
+<span>03</span>
+</button>
+<button aria-label="Abrir fotografía 04" class="photo-card" data-index="3" data-src="imagenes/archivo/foto04.jpg" data-title="Fotografía 04" type="button">
+<img alt="Fotografía 04" decoding="async" loading="lazy" src="imagenes/archivo/foto04.jpg"/>
+<span>04</span>
+</button>
+<button aria-label="Abrir fotografía 05" class="photo-card" data-index="4" data-src="imagenes/archivo/foto05.jpg" data-title="Fotografía 05" type="button">
+<img alt="Fotografía 05" decoding="async" loading="lazy" src="imagenes/archivo/foto05.jpg"/>
+<span>05</span>
+</button>
+<button aria-label="Abrir fotografía 06" class="photo-card" data-index="5" data-src="imagenes/archivo/foto06.jpg" data-title="Fotografía 06" type="button">
+<img alt="Fotografía 06" decoding="async" loading="lazy" src="imagenes/archivo/foto06.jpg"/>
+<span>06</span>
+</button>
+<button aria-label="Abrir fotografía 07" class="photo-card" data-index="6" data-src="imagenes/archivo/foto07.jpg" data-title="Fotografía 07" type="button">
+<img alt="Fotografía 07" decoding="async" loading="lazy" src="imagenes/archivo/foto07.jpg"/>
+<span>07</span>
+</button>
+<button aria-label="Abrir fotografía 08" class="photo-card" data-index="7" data-src="imagenes/archivo/foto08.jpg" data-title="Fotografía 08" type="button">
+<img alt="Fotografía 08" decoding="async" loading="lazy" src="imagenes/archivo/foto08.jpg"/>
+<span>08</span>
+</button>
+<button aria-label="Abrir fotografía 09" class="photo-card" data-index="8" data-src="imagenes/archivo/foto09.jpg" data-title="Fotografía 09" type="button">
+<img alt="Fotografía 09" decoding="async" loading="lazy" src="imagenes/archivo/foto09.jpg"/>
+<span>09</span>
+</button>
+<button aria-label="Abrir fotografía 10" class="photo-card" data-index="9" data-src="imagenes/archivo/foto10.jpg" data-title="Fotografía 10" type="button">
+<img alt="Fotografía 10" decoding="async" loading="lazy" src="imagenes/archivo/foto10.jpg"/>
+<span>10</span>
+</button>
+<button aria-label="Abrir fotografía 11" class="photo-card" data-index="10" data-src="imagenes/archivo/foto11.jpg" data-title="Fotografía 11" type="button">
+<img alt="Fotografía 11" decoding="async" loading="lazy" src="imagenes/archivo/foto11.jpg"/>
+<span>11</span>
+</button>
+<button aria-label="Abrir fotografía 12" class="photo-card" data-index="11" data-src="imagenes/archivo/foto12.jpg" data-title="Fotografía 12" type="button">
+<img alt="Fotografía 12" decoding="async" loading="lazy" src="imagenes/archivo/foto12.jpg"/>
+<span>12</span>
+</button>
+<button aria-label="Abrir fotografía 13" class="photo-card" data-index="12" data-src="imagenes/archivo/foto13.jpg" data-title="Fotografía 13" type="button">
+<img alt="Fotografía 13" decoding="async" loading="lazy" src="imagenes/archivo/foto13.jpg"/>
+<span>13</span>
+</button>
+<button aria-label="Abrir fotografía 14" class="photo-card" data-index="13" data-src="imagenes/archivo/foto14.jpg" data-title="Fotografía 14" type="button">
+<img alt="Fotografía 14" decoding="async" loading="lazy" src="imagenes/archivo/foto14.jpg"/>
+<span>14</span>
+</button>
+<button aria-label="Abrir fotografía 15" class="photo-card" data-index="14" data-src="imagenes/archivo/foto15.jpg" data-title="Fotografía 15" type="button">
+<img alt="Fotografía 15" decoding="async" loading="lazy" src="imagenes/archivo/foto15.jpg"/>
+<span>15</span>
+</button>
+<button aria-label="Abrir fotografía 16" class="photo-card" data-index="15" data-src="imagenes/archivo/foto16.jpg" data-title="Fotografía 16" type="button">
+<img alt="Fotografía 16" decoding="async" loading="lazy" src="imagenes/archivo/foto16.jpg"/>
+<span>16</span>
+</button>
+<button aria-label="Abrir fotografía 17" class="photo-card" data-index="16" data-src="imagenes/archivo/foto17.jpg" data-title="Fotografía 17" type="button">
+<img alt="Fotografía 17" decoding="async" loading="lazy" src="imagenes/archivo/foto17.jpg"/>
+<span>17</span>
+</button>
+<button aria-label="Abrir fotografía 18" class="photo-card" data-index="17" data-src="imagenes/archivo/foto18.jpg" data-title="Fotografía 18" type="button">
+<img alt="Fotografía 18" decoding="async" loading="lazy" src="imagenes/archivo/foto18.jpg"/>
+<span>18</span>
+</button>
+<button aria-label="Abrir fotografía 19" class="photo-card" data-index="18" data-src="imagenes/archivo/foto19.jpg" data-title="Fotografía 19" type="button">
+<img alt="Fotografía 19" decoding="async" loading="lazy" src="imagenes/archivo/foto19.jpg"/>
+<span>19</span>
+</button>
+<button aria-label="Abrir fotografía 20" class="photo-card" data-index="19" data-src="imagenes/archivo/foto20.jpg" data-title="Fotografía 20" type="button">
+<img alt="Fotografía 20" decoding="async" loading="lazy" src="imagenes/archivo/foto20.jpg"/>
+<span>20</span>
+</button>
+<button aria-label="Abrir fotografía 21" class="photo-card" data-index="20" data-src="imagenes/archivo/foto21.jpg" data-title="Fotografía 21" type="button">
+<img alt="Fotografía 21" decoding="async" loading="lazy" src="imagenes/archivo/foto21.jpg"/>
+<span>21</span>
+</button>
+<button aria-label="Abrir fotografía 22" class="photo-card" data-index="21" data-src="imagenes/archivo/foto22.jpg" data-title="Fotografía 22" type="button">
+<img alt="Fotografía 22" decoding="async" loading="lazy" src="imagenes/archivo/foto22.jpg"/>
+<span>22</span>
+</button>
+<button aria-label="Abrir fotografía 23" class="photo-card" data-index="22" data-src="imagenes/archivo/foto23.jpg" data-title="Fotografía 23" type="button">
+<img alt="Fotografía 23" decoding="async" loading="lazy" src="imagenes/archivo/foto23.jpg"/>
+<span>23</span>
+</button>
+<button aria-label="Abrir fotografía 24" class="photo-card" data-index="23" data-src="imagenes/archivo/foto24.jpg" data-title="Fotografía 24" type="button">
+<img alt="Fotografía 24" decoding="async" loading="lazy" src="imagenes/archivo/foto24.jpg"/>
+<span>24</span>
+</button>
+<button aria-label="Abrir fotografía 25" class="photo-card" data-index="24" data-src="imagenes/archivo/foto25.jpg" data-title="Fotografía 25" type="button">
+<img alt="Fotografía 25" decoding="async" loading="lazy" src="imagenes/archivo/foto25.jpg"/>
+<span>25</span>
+</button>
+<button aria-label="Abrir fotografía 26" class="photo-card" data-index="25" data-src="imagenes/archivo/foto26.jpg" data-title="Fotografía 26" type="button">
+<img alt="Fotografía 26" decoding="async" loading="lazy" src="imagenes/archivo/foto26.jpg"/>
+<span>26</span>
+</button>
+<button aria-label="Abrir fotografía 27" class="photo-card" data-index="26" data-src="imagenes/archivo/foto27.jpg" data-title="Fotografía 27" type="button">
+<img alt="Fotografía 27" decoding="async" loading="lazy" src="imagenes/archivo/foto27.jpg"/>
+<span>27</span>
+</button>
+<button aria-label="Abrir fotografía 28" class="photo-card" data-index="27" data-src="imagenes/archivo/foto28.jpg" data-title="Fotografía 28" type="button">
+<img alt="Fotografía 28" decoding="async" loading="lazy" src="imagenes/archivo/foto28.jpg"/>
+<span>28</span>
+</button>
+<button aria-label="Abrir fotografía 29" class="photo-card" data-index="28" data-src="imagenes/archivo/foto29.jpg" data-title="Fotografía 29" type="button">
+<img alt="Fotografía 29" decoding="async" loading="lazy" src="imagenes/archivo/foto29.jpg"/>
+<span>29</span>
+</button>
+<button aria-label="Abrir fotografía 30" class="photo-card" data-index="29" data-src="imagenes/archivo/foto30.jpg" data-title="Fotografía 30" type="button">
+<img alt="Fotografía 30" decoding="async" loading="lazy" src="imagenes/archivo/foto30.jpg"/>
+<span>30</span>
+</button>
+<button aria-label="Abrir fotografía 31" class="photo-card" data-index="30" data-src="imagenes/archivo/foto31.jpg" data-title="Fotografía 31" type="button">
+<img alt="Fotografía 31" decoding="async" loading="lazy" src="imagenes/archivo/foto31.jpg"/>
+<span>31</span>
+</button>
+<button aria-label="Abrir fotografía 32" class="photo-card" data-index="31" data-src="imagenes/archivo/foto32.jpg" data-title="Fotografía 32" type="button">
+<img alt="Fotografía 32" decoding="async" loading="lazy" src="imagenes/archivo/foto32.jpg"/>
+<span>32</span>
+</button>
+<button aria-label="Abrir fotografía 33" class="photo-card" data-index="32" data-src="imagenes/archivo/foto33.jpg" data-title="Fotografía 33" type="button">
+<img alt="Fotografía 33" decoding="async" loading="lazy" src="imagenes/archivo/foto33.jpg"/>
+<span>33</span>
+</button>
+<button aria-label="Abrir fotografía 34" class="photo-card" data-index="33" data-src="imagenes/archivo/foto34.jpg" data-title="Fotografía 34" type="button">
+<img alt="Fotografía 34" decoding="async" loading="lazy" src="imagenes/archivo/foto34.jpg"/>
+<span>34</span>
+</button>
+<button aria-label="Abrir fotografía 35" class="photo-card" data-index="34" data-src="imagenes/archivo/foto35.jpg" data-title="Fotografía 35" type="button">
+<img alt="Fotografía 35" decoding="async" loading="lazy" src="imagenes/archivo/foto35.jpg"/>
+<span>35</span>
+</button>
+<button aria-label="Abrir fotografía 36" class="photo-card" data-index="35" data-src="imagenes/archivo/foto36.jpg" data-title="Fotografía 36" type="button">
+<img alt="Fotografía 36" decoding="async" loading="lazy" src="imagenes/archivo/foto36.jpg"/>
+<span>36</span>
+</button>
+<button aria-label="Abrir fotografía 37" class="photo-card" data-index="36" data-src="imagenes/archivo/foto37.jpg" data-title="Fotografía 37" type="button">
+<img alt="Fotografía 37" decoding="async" loading="lazy" src="imagenes/archivo/foto37.jpg"/>
+<span>37</span>
+</button>
+<button aria-label="Abrir fotografía 38" class="photo-card" data-index="37" data-src="imagenes/archivo/foto38.jpg" data-title="Fotografía 38" type="button">
+<img alt="Fotografía 38" decoding="async" loading="lazy" src="imagenes/archivo/foto38.jpg"/>
+<span>38</span>
+</button>
+<button aria-label="Abrir fotografía 39" class="photo-card" data-index="38" data-src="imagenes/archivo/foto39.jpg" data-title="Fotografía 39" type="button">
+<img alt="Fotografía 39" decoding="async" loading="lazy" src="imagenes/archivo/foto39.jpg"/>
+<span>39</span>
+</button>
+<button aria-label="Abrir fotografía 40" class="photo-card" data-index="39" data-src="imagenes/archivo/foto40.jpg" data-title="Fotografía 40" type="button">
+<img alt="Fotografía 40" decoding="async" loading="lazy" src="imagenes/archivo/foto40.jpg"/>
+<span>40</span>
+</button>
+<button aria-label="Abrir fotografía 41" class="photo-card" data-index="40" data-src="imagenes/archivo/foto41.jpg" data-title="Fotografía 41" type="button">
+<img alt="Fotografía 41" decoding="async" loading="lazy" src="imagenes/archivo/foto41.jpg"/>
+<span>41</span>
+</button>
+<button aria-label="Abrir fotografía 42" class="photo-card" data-index="41" data-src="imagenes/archivo/foto42.jpg" data-title="Fotografía 42" type="button">
+<img alt="Fotografía 42" decoding="async" loading="lazy" src="imagenes/archivo/foto42.jpg"/>
+<span>42</span>
+</button>
+<button aria-label="Abrir fotografía 43" class="photo-card" data-index="42" data-src="imagenes/archivo/foto43.jpg" data-title="Fotografía 43" type="button">
+<img alt="Fotografía 43" decoding="async" loading="lazy" src="imagenes/archivo/foto43.jpg"/>
+<span>43</span>
+</button>
+<button aria-label="Abrir fotografía 44" class="photo-card" data-index="43" data-src="imagenes/archivo/foto44.jpg" data-title="Fotografía 44" type="button">
+<img alt="Fotografía 44" decoding="async" loading="lazy" src="imagenes/archivo/foto44.jpg"/>
+<span>44</span>
+</button>
+<button aria-label="Abrir fotografía 45" class="photo-card" data-index="44" data-src="imagenes/archivo/foto45.jpg" data-title="Fotografía 45" type="button">
+<img alt="Fotografía 45" decoding="async" loading="lazy" src="imagenes/archivo/foto45.jpg"/>
+<span>45</span>
+</button>
+<button aria-label="Abrir fotografía 46" class="photo-card" data-index="45" data-src="imagenes/archivo/foto46.jpg" data-title="Fotografía 46" type="button">
+<img alt="Fotografía 46" decoding="async" loading="lazy" src="imagenes/archivo/foto46.jpg"/>
+<span>46</span>
+</button>
+<button aria-label="Abrir fotografía 47" class="photo-card" data-index="46" data-src="imagenes/archivo/foto47.jpg" data-title="Fotografía 47" type="button">
+<img alt="Fotografía 47" decoding="async" loading="lazy" src="imagenes/archivo/foto47.jpg"/>
+<span>47</span>
+</button>
+<button aria-label="Abrir fotografía 48" class="photo-card" data-index="47" data-src="imagenes/archivo/foto48.jpg" data-title="Fotografía 48" type="button">
+<img alt="Fotografía 48" decoding="async" loading="lazy" src="imagenes/archivo/foto48.jpg"/>
+<span>48</span>
+</button>
+<button aria-label="Abrir fotografía 49" class="photo-card" data-index="48" data-src="imagenes/archivo/foto49.jpg" data-title="Fotografía 49" type="button">
+<img alt="Fotografía 49" decoding="async" loading="lazy" src="imagenes/archivo/foto49.jpg"/>
+<span>49</span>
+</button>
+<button aria-label="Abrir fotografía 50" class="photo-card" data-index="49" data-src="imagenes/archivo/foto50.jpg" data-title="Fotografía 50" type="button">
+<img alt="Fotografía 50" decoding="async" loading="lazy" src="imagenes/archivo/foto50.jpg"/>
+<span>50</span>
+</button>
+<button aria-label="Abrir fotografía 51" class="photo-card" data-index="50" data-src="imagenes/archivo/foto51.jpg" data-title="Fotografía 51" type="button">
+<img alt="Fotografía 51" decoding="async" loading="lazy" src="imagenes/archivo/foto51.jpg"/>
+<span>51</span>
+</button>
+<button aria-label="Abrir fotografía 52" class="photo-card" data-index="51" data-src="imagenes/archivo/foto52.jpg" data-title="Fotografía 52" type="button">
+<img alt="Fotografía 52" decoding="async" loading="lazy" src="imagenes/archivo/foto52.jpg"/>
+<span>52</span>
+</button>
+<button aria-label="Abrir fotografía 53" class="photo-card" data-index="52" data-src="imagenes/archivo/foto53.jpg" data-title="Fotografía 53" type="button">
+<img alt="Fotografía 53" decoding="async" loading="lazy" src="imagenes/archivo/foto53.jpg"/>
+<span>53</span>
+</button>
+<button aria-label="Abrir fotografía 54" class="photo-card" data-index="53" data-src="imagenes/archivo/foto54.jpg" data-title="Fotografía 54" type="button">
+<img alt="Fotografía 54" decoding="async" loading="lazy" src="imagenes/archivo/foto54.jpg"/>
+<span>54</span>
+</button>
+<button aria-label="Abrir fotografía 55" class="photo-card" data-index="54" data-src="imagenes/archivo/foto55.jpg" data-title="Fotografía 55" type="button">
+<img alt="Fotografía 55" decoding="async" loading="lazy" src="imagenes/archivo/foto55.jpg"/>
+<span>55</span>
+</button>
+<button aria-label="Abrir fotografía 56" class="photo-card" data-index="55" data-src="imagenes/archivo/foto56.jpg" data-title="Fotografía 56" type="button">
+<img alt="Fotografía 56" decoding="async" loading="lazy" src="imagenes/archivo/foto56.jpg"/>
+<span>56</span>
+</button>
+<button aria-label="Abrir fotografía 57" class="photo-card" data-index="56" data-src="imagenes/archivo/foto57.jpg" data-title="Fotografía 57" type="button">
+<img alt="Fotografía 57" decoding="async" loading="lazy" src="imagenes/archivo/foto57.jpg"/>
+<span>57</span>
+</button>
+<button aria-label="Abrir fotografía 58" class="photo-card" data-index="57" data-src="imagenes/archivo/foto58.jpg" data-title="Fotografía 58" type="button">
+<img alt="Fotografía 58" decoding="async" loading="lazy" src="imagenes/archivo/foto58.jpg"/>
+<span>58</span>
+</button>
+<button aria-label="Abrir fotografía 59" class="photo-card" data-index="58" data-src="imagenes/archivo/foto59.jpg" data-title="Fotografía 59" type="button">
+<img alt="Fotografía 59" decoding="async" loading="lazy" src="imagenes/archivo/foto59.jpg"/>
+<span>59</span>
+</button>
+<button aria-label="Abrir fotografía 60" class="photo-card" data-index="59" data-src="imagenes/archivo/foto60.jpg" data-title="Fotografía 60" type="button">
+<img alt="Fotografía 60" decoding="async" loading="lazy" src="imagenes/archivo/foto60.jpg"/>
+<span>60</span>
+</button>
+</section>
+</main>
+<div aria-hidden="true" class="lightbox" id="photoLightbox">
+<div aria-label="Visor de fotografías" aria-modal="true" class="lightbox-panel" role="dialog">
+<button aria-label="Cerrar fotografía" class="close" type="button">×</button>
+<button aria-label="Fotografía anterior" class="arrow previous" type="button">←</button>
+<figure>
+<img alt="Fotografía ampliada" id="lightboxImage" src="imagenes/archivo/foto01.jpg"/>
+<figcaption>
+<strong id="lightboxTitle">Fotografía 01</strong>
+<span id="lightboxPosition">01 / 60</span>
+</figcaption>
+</figure>
+<button aria-label="Fotografía siguiente" class="arrow next" type="button">→</button>
+</div>
+</div>
+<footer class="footer">NEXXO · ARCHIVO FOTOGRÁFICO · 60 IMÁGENES</footer>
+<script>
+(() => {
+  const cards = [...document.querySelectorAll('.photo-card')];
+  const lightbox = document.getElementById('photoLightbox');
+  const image = document.getElementById('lightboxImage');
+  const title = document.getElementById('lightboxTitle');
+  const position = document.getElementById('lightboxPosition');
+  const closeButton = lightbox.querySelector('.close');
+  const previousButton = lightbox.querySelector('.previous');
+  const nextButton = lightbox.querySelector('.next');
+
+  let currentIndex = 0;
+
+  const showPhoto = index => {
+    currentIndex = (index + cards.length) % cards.length;
+    const card = cards[currentIndex];
+
+    image.src = card.dataset.src;
+    image.alt = card.dataset.title;
+    title.textContent = card.dataset.title;
+    position.textContent =
+      String(currentIndex + 1).padStart(2, '0') +
+      ' / ' +
+      String(cards.length).padStart(2, '0');
+  };
+
+  const openLightbox = index => {
+    showPhoto(index);
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('locked');
+    closeButton.focus();
+  };
+
+  const closeLightbox = () => {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('locked');
+    cards[currentIndex].focus();
+  };
+
+  cards.forEach((card, index) => {
+    card.addEventListener('click', () => openLightbox(index));
+  });
+
+  closeButton.addEventListener('click', closeLightbox);
+  previousButton.addEventListener('click', () => showPhoto(currentIndex - 1));
+  nextButton.addEventListener('click', () => showPhoto(currentIndex + 1));
+
+  lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (!lightbox.classList.contains('open')) return;
+
+    if (event.key === 'Escape') closeLightbox();
+    if (event.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+    if (event.key === 'ArrowRight') showPhoto(currentIndex + 1);
+  });
+})();
+</script>
+<span aria-hidden="true" data-signature="M.M.z" hidden="True">M.M.z</span></body>
+</html>
