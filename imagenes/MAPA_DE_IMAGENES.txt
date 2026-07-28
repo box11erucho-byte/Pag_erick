@@ -1,0 +1,30 @@
+NEXXO — MAPA DE IMÁGENES
+
+IMÁGENES GENERALES
+imagen1.jpg a imagen9.jpg:
+Portada, carrusel, perfil, especialidades y referencias visuales.
+
+PROYECTOS — 5 FOTOS
+imagen10.jpg = Geometría
+imagen11.jpg = Positivo / Negativo
+imagen12.jpg = Cartel futurista
+imagen13.jpg = Manual corporativo
+imagen14.jpg = Diseño editorial
+
+FOTOGRAFÍA — 5 FOTOS
+imagen16.jpg = Retrato personal
+imagen17.jpg = Luz y carácter
+imagen18.jpg = Movimiento urbano
+imagen19.jpg = Escena cotidiana
+imagen20.jpg = Retrato ambiental
+
+DECLARACIÓN “DISEÑAR TAMBIÉN ES CONSTRUIR UNA FORMA DE MIRAR”
+imagen22.jpg = Fotografía firmada 01
+imagen23.jpg = Fotografía firmada 02
+imagen24.jpg = Fotografía firmada 03
+
+OTROS
+imagen15.jpg = Recurso web / especialidad HTML
+imagen21.jpg = Imagen adicional disponible
+firma.svg = Firma del autor
+qr-whatsapp.png = Ya no se muestra en el sitio
